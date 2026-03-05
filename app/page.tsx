@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
 import FinancialSummary from '@/components/FinancialSummary';
 import PortfolioInfographic from '@/components/PortfolioInfographic';
 import PortfolioRecommendations from '@/components/PortfolioRecommendations';
@@ -40,8 +42,24 @@ const sections = [
 ];
 
 export default function Home() {
+  const { session, loading, signOut } = useAuth();
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState('summary');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !session) {
+      router.replace('/login');
+    }
+  }, [loading, session, router]);
+
+  if (loading || !session) {
+    return (
+      <div style={{ backgroundColor: C.bg }} className="min-h-screen flex items-center justify-center">
+        <div style={{ color: C.textMid }} className="text-sm">Loading…</div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: C.bg, color: C.text }} className="min-h-screen font-sans">
@@ -57,12 +75,22 @@ export default function Home() {
                 Wealth & Wellness Hub
               </h1>
             </div>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:opacity-75"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <div className="flex items-center gap-3">
+              <span style={{ color: C.textMid }} className="hidden md:block text-sm">{session.user.email}</span>
+              <button
+                onClick={signOut}
+                style={{ borderColor: C.border, color: C.textMid }}
+                className="hidden md:block px-3 py-1.5 rounded-lg border text-sm hover:opacity-75"
+              >
+                Sign out
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg hover:opacity-75"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
 
