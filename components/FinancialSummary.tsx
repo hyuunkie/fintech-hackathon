@@ -1,7 +1,7 @@
 'use client';
 
 import { C, WEALTH_COMP, TOTAL, OVER_TIME } from '@/lib/constants';
-import { TrendingUp, ArrowUp } from 'lucide-react';
+import { TrendingUp, ArrowUp, BarChart2, Target } from 'lucide-react';
 
 export default function FinancialSummary() {
   const previousTotal = OVER_TIME[OVER_TIME.length - 2];
@@ -152,7 +152,7 @@ export default function FinancialSummary() {
                 <td className="text-right py-4 px-4" style={{ color: C.textMid }}>
                   {asset.pct}%
                 </td>
-                <td className="py-4 px-4 text-sm" style={{ color: C.textDim }}>
+                <td className="py-4 px-4 text-sm" style={{ color: C.textMid }}>
                   {asset.source}
                 </td>
               </tr>
@@ -177,29 +177,29 @@ export default function FinancialSummary() {
               YoY Growth
             </p>
             <p className="text-2xl font-bold">+12.4%</p>
-            <p style={{ color: C.textDim }} className="text-xs mt-2">
+            <p style={{ color: C.textMid }} className="text-xs mt-2">
               Compared to last year
             </p>
           </div>
 
           <div className="p-6 rounded-xl" style={{ backgroundColor: C.bgElevated }}>
-            <div className="text-2xl mb-3">📊</div>
+            <BarChart2 style={{ color: C.blue }} size={24} className="mb-3" />
             <p style={{ color: C.textMid }} className="text-sm mb-2">
               Monthly Savings
             </p>
             <p className="text-2xl font-bold">$2,400</p>
-            <p style={{ color: C.textDim }} className="text-xs mt-2">
+            <p style={{ color: C.textMid }} className="text-xs mt-2">
               Average contribution
             </p>
           </div>
 
           <div className="p-6 rounded-xl" style={{ backgroundColor: C.bgElevated }}>
-            <div className="text-2xl mb-3">🎯</div>
+            <Target style={{ color: C.gold }} size={24} className="mb-3" />
             <p style={{ color: C.textMid }} className="text-sm mb-2">
               Diversification
             </p>
             <p className="text-2xl font-bold">5 Classes</p>
-            <p style={{ color: C.textDim }} className="text-xs mt-2">
+            <p style={{ color: C.textMid }} className="text-xs mt-2">
               Across 3 regions
             </p>
           </div>

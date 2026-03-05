@@ -73,8 +73,18 @@ export default function PortfolioInfographic() {
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${((value / TOTAL) * 100).toFixed(0)}%`}
+                  labelLine={{ stroke: C.borderLight }}
+                  label={({ cx, cy, midAngle, innerRadius, outerRadius, name, value }: any) => {
+                    const RADIAN = Math.PI / 180;
+                    const radius = innerRadius + (outerRadius - innerRadius) * 1.55;
+                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                    return (
+                      <text x={x} y={y} fill={C.text} textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize={11}>
+                        {name}: {((value / TOTAL) * 100).toFixed(0)}%
+                      </text>
+                    );
+                  }}
                   outerRadius={120}
                   fill="#8884d8"
                   dataKey="value"
@@ -86,11 +96,13 @@ export default function PortfolioInfographic() {
                 <Tooltip
                   formatter={(value: any) => formatCurrency(value)}
                   contentStyle={{
-                    backgroundColor: C.bgElevated,
-                    border: `1px solid ${C.border}`,
+                    backgroundColor: C.bg,
+                    border: `1px solid ${C.borderLight}`,
                     borderRadius: '8px',
                     color: C.text,
                   }}
+                  itemStyle={{ color: C.text }}
+                  labelStyle={{ color: C.textMid }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -112,7 +124,7 @@ export default function PortfolioInfographic() {
                     ></div>
                     <div className="flex-1">
                       <p className="font-semibold">{asset.label}</p>
-                      <p style={{ color: C.textDim }} className="text-xs">
+                      <p style={{ color: C.textMid }} className="text-xs">
                         {asset.source}
                       </p>
                     </div>
@@ -165,7 +177,7 @@ export default function PortfolioInfographic() {
                   {formatCurrency(risk.value)}
                 </p>
                 <div className="mt-4 pt-4 border-t" style={{ borderColor: C.border }}>
-                  <p style={{ color: C.textDim }} className="text-xs">
+                  <p style={{ color: C.textMid }} className="text-xs">
                     {risk.assets.join(', ')}
                   </p>
                 </div>
@@ -240,7 +252,7 @@ export default function PortfolioInfographic() {
                       }}
                     ></div>
                   </div>
-                  <p style={{ color: C.textDim }} className="text-xs mt-2">
+                  <p style={{ color: C.textMid }} className="text-xs mt-2">
                     {formatCurrency(asset.value)}
                   </p>
                 </div>

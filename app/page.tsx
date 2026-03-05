@@ -32,13 +32,13 @@ const C = {
 };
 
 const sections = [
-  { id: 'summary', label: 'Summary', icon: '📊' },
-  { id: 'portfolio', label: 'Portfolio', icon: '💼' },
-  { id: 'recommendations', label: 'Recommendations', icon: '💡' },
-  { id: 'health-score', label: 'Health Score', icon: '📈' },
-  { id: 'storyboard', label: 'Financial Story', icon: '📅' },
-  { id: 'milestones', label: 'Milestones', icon: '🎯' },
-  { id: 'spending', label: 'Spending', icon: '💰' },
+  { id: 'summary',         label: 'Summary',          icon: <BarChart2    size={15} /> },
+  { id: 'portfolio',       label: 'Portfolio',         icon: <Briefcase    size={15} /> },
+  { id: 'recommendations', label: 'Recommendations',   icon: <Lightbulb    size={15} /> },
+  { id: 'health-score',    label: 'Health Score',      icon: <TrendingUp   size={15} /> },
+  { id: 'storyboard',      label: 'Financial Story',   icon: <CalendarDays size={15} /> },
+  { id: 'milestones',      label: 'Milestones',        icon: <Target       size={15} /> },
+  { id: 'spending',        label: 'Spending',          icon: <Wallet       size={15} /> },
 ];
 
 export default function Home() {
@@ -112,7 +112,7 @@ export default function Home() {
                   color: activeSection === section.id ? '#000' : C.text,
                   borderColor: activeSection === section.id ? C.gold : C.border,
                 }}
-                className="px-4 py-2 rounded-lg border transition-colors whitespace-nowrap text-sm md:text-base hover:opacity-80"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg border transition-colors whitespace-nowrap text-sm md:text-base hover:opacity-80"
               >
                 {section.icon} {section.label}
               </button>
