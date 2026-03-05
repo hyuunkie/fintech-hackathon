@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { C, MILESTONES_DATA } from '@/lib/constants';
-import { Plus, X, Target, TrendingUp } from 'lucide-react';
+import { Plus, X, Target, TrendingUp, Car, Plane, Home, BookOpen, Umbrella } from 'lucide-react';
 
 interface Milestone {
   id: number;
@@ -69,20 +69,15 @@ export default function MilestonePlanner() {
     }
   };
 
-  const getCategoryEmoji = (category: string) => {
+  const getCategoryIcon = (category: string) => {
+    const s = { size: 22 };
     switch (category) {
-      case 'vehicle':
-        return '🚗';
-      case 'travel':
-        return '✈️';
-      case 'home':
-        return '🏠';
-      case 'education':
-        return '📚';
-      case 'retirement':
-        return '🏖️';
-      default:
-        return '🎯';
+      case 'vehicle':    return <Car      {...s} style={{ color: C.blue }}   />;
+      case 'travel':     return <Plane    {...s} style={{ color: C.teal }}   />;
+      case 'home':       return <Home     {...s} style={{ color: C.green }}  />;
+      case 'education':  return <BookOpen {...s} style={{ color: C.purple }} />;
+      case 'retirement': return <Umbrella {...s} style={{ color: C.gold }}   />;
+      default:           return <Target   {...s} style={{ color: C.blue }}   />;
     }
   };
 
@@ -420,7 +415,7 @@ export default function MilestonePlanner() {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4 flex-1">
-                    <div className="text-2xl">{getCategoryEmoji(milestone.category)}</div>
+                    <div className="w-9 h-9 flex items-center justify-center rounded-lg" style={{ backgroundColor: C.bgElevated }}>{getCategoryIcon(milestone.category)}</div>
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h4 className="text-lg font-bold">{milestone.name}</h4>
@@ -522,6 +517,10 @@ export default function MilestonePlanner() {
                         updateMilestoneAmount(milestone.id, parseFloat(e.target.value))
                       }
                       className="flex-1"
+                      style={{
+                        accentColor:
+                          progress >= 75 ? C.green : progress >= 40 ? C.gold : C.red,
+                      }}
                     />
                     <input
                       type="number"

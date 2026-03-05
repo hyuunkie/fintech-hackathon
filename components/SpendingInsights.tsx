@@ -18,7 +18,7 @@ import {
   LineChart,
   Line,
 } from 'recharts';
-import { TrendingUp, AlertCircle, CheckCircle, Zap } from 'lucide-react';
+import { TrendingUp, AlertCircle, CheckCircle, Zap, Lightbulb } from 'lucide-react';
 
 export default function SpendingInsights() {
   const totalSpent = SPENDING_DATA.reduce((sum, item) => sum + item.amount, 0);
@@ -159,22 +159,26 @@ export default function SpendingInsights() {
               <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false} />
               <XAxis
                 dataKey="category"
-                angle={-45}
-                textAnchor="end"
-                height={100}
-                tick={{ fontSize: 12, fill: C.textDim }}
+                angle={0}
+                textAnchor="middle"
+                height={60}
+                tick={{ fontSize: 11, fill: C.textMid }}
+                interval={0}
               />
               <YAxis
-                tick={{ fontSize: 12, fill: C.textDim }}
+                tick={{ fontSize: 12, fill: C.textMid }}
                 tickFormatter={(value) => `$${value / 1000}K`}
               />
               <Tooltip
+                cursor={{ fill: 'rgba(78, 158, 245, 0.12)' }}
                 contentStyle={{
-                  backgroundColor: C.bgElevated,
-                  border: `1px solid ${C.border}`,
+                  backgroundColor: C.bg,
+                  border: `1px solid ${C.borderLight}`,
                   borderRadius: '8px',
                   color: C.text,
                 }}
+                itemStyle={{ color: C.text }}
+                labelStyle={{ color: C.textMid }}
                 formatter={(value: any) => formatCurrency(value)}
               />
               <Legend wrapperStyle={{ color: C.text }} />
@@ -199,10 +203,19 @@ export default function SpendingInsights() {
                 data={SPENDING_DATA}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
-                label={(props: any) => {
-                  const data = props.payload;
-                  return `${data.category}: ${((data.budget / totalBudget) * 100).toFixed(0)}%`;
+                nameKey="category"
+                labelLine={{ stroke: C.borderLight }}
+                label={({ cx, cy, midAngle, innerRadius, outerRadius, payload }: any) => {
+                  const RADIAN = Math.PI / 180;
+                  const radius = innerRadius + (outerRadius - innerRadius) * 1.5;
+                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                  const pct = ((payload.budget / totalBudget) * 100).toFixed(0);
+                  return (
+                    <text x={x} y={y} fill={C.text} textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize={11}>
+                      {payload.category}: {pct}%
+                    </text>
+                  );
                 }}
                 outerRadius={100}
                 fill="#8884d8"
@@ -213,13 +226,15 @@ export default function SpendingInsights() {
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: any) => formatCurrency(value)}
+                formatter={(value: any, name: any) => [formatCurrency(value), name]}
                 contentStyle={{
-                  backgroundColor: C.bgElevated,
-                  border: `1px solid ${C.border}`,
+                  backgroundColor: C.bg,
+                  border: `1px solid ${C.borderLight}`,
                   borderRadius: '8px',
                   color: C.text,
                 }}
+                itemStyle={{ color: C.text }}
+                labelStyle={{ color: C.textMid }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -399,8 +414,9 @@ export default function SpendingInsights() {
                   <p style={{ color: C.textMid }} className="text-sm mb-2">
                     {insight.insight}
                   </p>
-                  <p style={{ color: C.textDim }} className="text-xs">
-                    💡 {insight.recommendation}
+                  <p style={{ color: C.textDim }} className="text-xs flex items-center gap-1">
+                    <Lightbulb size={12} style={{ color: C.gold, flexShrink: 0 }} />
+                    {insight.recommendation}
                   </p>
                 </div>
               </div>
