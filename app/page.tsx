@@ -9,6 +9,8 @@ import FinancialHealthScore from '@/components/FinancialHealthScore';
 import FinancialStoryboard from '@/components/FinancialStoryboard';
 import MilestonePlanner from '@/components/MilestonePlanner';
 import SpendingInsights from '@/components/SpendingInsights';
+import SecurityCenter from '@/components/SecurityCenter';
+
 
 const C = {
   bg: "#080D14",
@@ -37,6 +39,7 @@ const sections = [
   { id: 'storyboard', label: 'Financial Story', icon: '📅' },
   { id: 'milestones', label: 'Milestones', icon: '🎯' },
   { id: 'spending', label: 'Spending', icon: '💰' },
+  { id: 'security', label: 'Security', icon: '🔒' },
 ];
 
 export default function Home() {
@@ -102,6 +105,7 @@ export default function Home() {
         {activeSection === 'storyboard' && <FinancialStoryboard />}
         {activeSection === 'milestones' && <MilestonePlanner />}
         {activeSection === 'spending' && <SpendingInsights />}
+        {activeSection === 'security' && <SecurityCenter />}
       </main>
     </div>
   );
