@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import FinancialSummary from '@/components/FinancialSummary';
 import PortfolioInfographic from '@/components/PortfolioInfographic';
