@@ -11,6 +11,8 @@ import FinancialHealthScore from '@/components/FinancialHealthScore';
 import FinancialStoryboard from '@/components/FinancialStoryboard';
 import MilestonePlanner from '@/components/MilestonePlanner';
 import SpendingInsights from '@/components/SpendingInsights';
+import SecurityCenter from '@/components/SecurityCenter';
+
 
 const C = {
   bg: "#080D14",
@@ -130,6 +132,7 @@ export default function Home() {
         {activeSection === 'storyboard' && <FinancialStoryboard />}
         {activeSection === 'milestones' && <MilestonePlanner />}
         {activeSection === 'spending' && <SpendingInsights />}
+        {activeSection === 'security' && <SecurityCenter />}
       </main>
     </div>
   );
