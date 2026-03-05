@@ -175,13 +175,13 @@ export default function FinancialHealthScore() {
                 ></div>
               </div>
               <div className="flex justify-between mt-2">
-                <span style={{ color: C.textDim }} className="text-xs">
+                <span style={{ color: C.textMid }} className="text-xs">
                   0
                 </span>
                 <span style={{ color: metric.color }} className="text-xs font-semibold">
                   {metric.status}
                 </span>
-                <span style={{ color: C.textDim }} className="text-xs">
+                <span style={{ color: C.textMid }} className="text-xs">
                   100
                 </span>
               </div>
@@ -238,7 +238,7 @@ export default function FinancialHealthScore() {
                     }}
                   ></div>
                 </div>
-                <p style={{ color: C.textDim }} className="text-xs mt-1">
+                <p style={{ color: C.textMid }} className="text-xs mt-1">
                   {Math.round(progressPercent)}% complete
                 </p>
               </div>

@@ -118,7 +118,7 @@ export default function PortfolioRecommendations() {
             <p className="text-3xl font-bold" style={{ color: C.red }}>
               1
             </p>
-            <p style={{ color: C.textDim }} className="text-xs mt-2">
+            <p style={{ color: C.textMid }} className="text-xs mt-2">
               Immediate action recommended
             </p>
           </div>
@@ -133,7 +133,7 @@ export default function PortfolioRecommendations() {
             <p className="text-3xl font-bold" style={{ color: C.gold }}>
               3
             </p>
-            <p style={{ color: C.textDim }} className="text-xs mt-2">
+            <p style={{ color: C.textMid }} className="text-xs mt-2">
               Should implement soon
             </p>
           </div>
@@ -148,7 +148,7 @@ export default function PortfolioRecommendations() {
             <p className="text-3xl font-bold" style={{ color: C.green }}>
               +$5K/yr
             </p>
-            <p style={{ color: C.textDim }} className="text-xs mt-2">
+            <p style={{ color: C.textMid }} className="text-xs mt-2">
               If implemented
             </p>
           </div>
@@ -205,13 +205,13 @@ export default function PortfolioRecommendations() {
 
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p style={{ color: C.textDim }} className="text-xs mb-1">
+                    <p style={{ color: C.textMid }} className="text-xs mb-1">
                       Impact
                     </p>
                     <p className="text-sm font-semibold">{rec.impact}</p>
                   </div>
                   <div>
-                    <p style={{ color: C.textDim }} className="text-xs mb-1">
+                    <p style={{ color: C.textMid }} className="text-xs mb-1">
                       Potential Gain
                     </p>
                     <p style={{ color: C.green }} className="text-sm font-semibold">
@@ -219,7 +219,7 @@ export default function PortfolioRecommendations() {
                     </p>
                   </div>
                   <div>
-                    <p style={{ color: C.textDim }} className="text-xs mb-1">
+                    <p style={{ color: C.textMid }} className="text-xs mb-1">
                       Risk Level
                     </p>
                     <p
@@ -266,15 +266,16 @@ export default function PortfolioRecommendations() {
         <div className="space-y-4">
           {/* Immediate */}
           <div>
-            <p style={{ color: C.textMid }} className="text-sm font-semibold mb-3">
-              🔴 This Month
-            </p>
+            <div className="flex items-center gap-2 text-sm font-semibold mb-3" style={{ color: C.textMid }}>
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: C.red }}></div>
+              This Month
+            </div>
             <div
               style={{ backgroundColor: C.bgElevated, borderColor: C.borderLight }}
               className="border rounded-lg p-4"
             >
               <p className="font-semibold">Increase Liquidity Buffer</p>
-              <p style={{ color: C.textDim }} className="text-sm mt-1">
+              <p style={{ color: C.textMid }} className="text-sm mt-1">
                 Move $50K-$100K to emergency fund
               </p>
             </div>
@@ -282,9 +283,10 @@ export default function PortfolioRecommendations() {
 
           {/* Next Quarter */}
           <div>
-            <p style={{ color: C.textMid }} className="text-sm font-semibold mb-3">
-              🟡 Next 3 Months
-            </p>
+            <div className="flex items-center gap-2 text-sm font-semibold mb-3" style={{ color: C.textMid }}>
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: C.gold }}></div>
+              Next 3 Months
+            </div>
             <div className="space-y-3">
               {[
                 'Diversify Digital Assets',
@@ -304,9 +306,10 @@ export default function PortfolioRecommendations() {
 
           {/* Long term */}
           <div>
-            <p style={{ color: C.textMid }} className="text-sm font-semibold mb-3">
-              🟢 Next 12 Months
-            </p>
+            <div className="flex items-center gap-2 text-sm font-semibold mb-3" style={{ color: C.textMid }}>
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: C.green }}></div>
+              Next 12 Months
+            </div>
             <div className="space-y-3">
               {[
                 'Optimize Tax Efficiency',
