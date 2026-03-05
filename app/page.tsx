@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet } from 'lucide-react';
+import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet, Lock } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import FinancialSummary from '@/components/FinancialSummary';
 import PortfolioInfographic from '@/components/PortfolioInfographic';
@@ -41,6 +41,7 @@ const sections = [
   { id: 'storyboard',      label: 'Financial Story',   icon: <CalendarDays size={15} /> },
   { id: 'milestones',      label: 'Milestones',        icon: <Target       size={15} /> },
   { id: 'spending',        label: 'Spending',          icon: <Wallet       size={15} /> },
+  { id: 'security',        label: 'Security',          icon: <Lock         size={15} /> }
 ];
 
 export default function Home() {

@@ -1,7 +1,12 @@
 'use client';
 
+import { AuthProvider } from '@/lib/auth-context';
 import { SecurityProvider } from '@/context/SecurityContext';
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  return <SecurityProvider>{children}</SecurityProvider>;
+export function AuthProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <SecurityProvider>{children}</SecurityProvider>
+    </AuthProvider>
+  );
 }
