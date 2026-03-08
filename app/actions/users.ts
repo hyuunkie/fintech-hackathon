@@ -1,7 +1,11 @@
 "use server";
 
-import supabase from "@/lib/db";
-import type { User, CreateUserInput, UpdateUserInput } from "@/lib/types/database";
+import { supabase } from "@/lib/supabase";
+import type { Database } from "@/lib/database.types";
+
+type User = Database["public"]["Tables"]["users"]["Row"];
+type UserInsert = Omit<User, "id" | "created_at" | "updated_at">;
+type UserUpdate = Partial<UserInsert>;
 
 export async function getUser(id: string): Promise<User | null> {
   const { data, error } = await supabase
@@ -23,28 +27,39 @@ export async function getUserByEmail(email: string): Promise<User | null> {
   return data;
 }
 
-export async function createUser(input: CreateUserInput): Promise<User> {
+
+export async function createUser(input: UserInsert): Promise<User> {
   const { data, error } = await supabase
     .from("users")
-    .insert({ email: input.email, name: input.name, avatar_url: input.avatar_url ?? null })
+    .insert(input as never)
     .select()
     .single();
   if (error) throw new Error(error.message);
-  return data;
+  return data as User;
 }
 
-export async function updateUser(id: string, input: UpdateUserInput): Promise<User | null> {
+export async function updateUser(id: string, input: UserUpdate): Promise<User | null> {
   const { data, error } = await supabase
     .from("users")
-    .update(input)
+    .update(input as never)
     .eq("id", id)
     .select()
     .single();
   if (error) return null;
-  return data;
+  return data as User;
 }
 
 export async function deleteUser(id: string): Promise<boolean> {
   const { error } = await supabase.from("users").delete().eq("id", id);
   return !error;
+}
+
+export async function getUserByAuthId(supabaseAuthId: string): Promise<User | null> {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("supabase_auth_id", supabaseAuthId)
+    .single();
+  if (error) return null;
+  return data;
 }

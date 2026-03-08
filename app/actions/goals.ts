@@ -1,21 +1,25 @@
 "use server";
 
-import supabase from "@/lib/db";
-import type { Goal, CreateGoalInput, UpdateGoalInput } from "@/lib/types/database";
+import { supabase } from "@/lib/supabase";
+import type { Database } from "@/lib/database.types";
 
-export async function getGoals(userId: string): Promise<Goal[]> {
+type Milestone = Database["public"]["Tables"]["milestones"]["Row"];
+type MilestoneInsert = Omit<Milestone, "id" | "created_at" | "updated_at">;
+type MilestoneUpdate = Partial<MilestoneInsert>;
+
+export async function getMilestones(userId: string): Promise<Milestone[]> {
   const { data, error } = await supabase
-    .from("goals")
+    .from("milestones")
     .select("*")
     .eq("user_id", userId)
-    .order("deadline", { ascending: true, nullsFirst: false });
+    .order("target_date", { ascending: true, nullsFirst: false });
   if (error) throw new Error(error.message);
   return data;
 }
 
-export async function getGoal(id: string, userId: string): Promise<Goal | null> {
+export async function getMilestone(id: string, userId: string): Promise<Milestone | null> {
   const { data, error } = await supabase
-    .from("goals")
+    .from("milestones")
     .select("*")
     .eq("id", id)
     .eq("user_id", userId)
@@ -24,53 +28,53 @@ export async function getGoal(id: string, userId: string): Promise<Goal | null> 
   return data;
 }
 
-export async function createGoal(input: CreateGoalInput): Promise<Goal> {
+export async function createMilestone(input: MilestoneInsert): Promise<Milestone> {
   const { data, error } = await supabase
-    .from("goals")
-    .insert(input)
+    .from("milestones")
+    .insert(input as never)
     .select()
     .single();
   if (error) throw new Error(error.message);
-  return data;
+  return data as Milestone;
 }
 
-export async function updateGoal(
+export async function updateMilestone(
   id: string,
   userId: string,
-  input: UpdateGoalInput,
-): Promise<Goal | null> {
+  input: MilestoneUpdate,
+): Promise<Milestone | null> {
   const { data, error } = await supabase
-    .from("goals")
-    .update(input)
+    .from("milestones")
+    .update(input as never)
     .eq("id", id)
     .eq("user_id", userId)
     .select()
     .single();
   if (error) return null;
-  return data;
+  return data as Milestone;
 }
 
-export async function addToGoalProgress(
+export async function addToMilestoneProgress(
   id: string,
   userId: string,
   amount: number,
-): Promise<Goal | null> {
-  // Fetch current, then update
-  const goal = await getGoal(id, userId);
-  if (!goal) return null;
+): Promise<Milestone | null> {
+  const milestone = await getMilestone(id, userId);
+  if (!milestone) return null;
 
-  const newAmount = parseFloat(goal.current_amount) + amount;
-  const isCompleted = newAmount >= parseFloat(goal.target_amount);
+  const newAmount = (milestone.current_amount ?? 0) + amount;
+  const isComplete =
+    milestone.target_amount !== null && newAmount >= milestone.target_amount;
 
-  return updateGoal(id, userId, {
-    current_amount: newAmount.toString(),
-    status: isCompleted ? "completed" : goal.status,
+  return updateMilestone(id, userId, {
+    current_amount: newAmount,
+    is_complete: isComplete,
   });
 }
 
-export async function deleteGoal(id: string, userId: string): Promise<boolean> {
+export async function deleteMilestone(id: string, userId: string): Promise<boolean> {
   const { error } = await supabase
-    .from("goals")
+    .from("milestones")
     .delete()
     .eq("id", id)
     .eq("user_id", userId);

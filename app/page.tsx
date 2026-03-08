@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
+import { getUserByAuthId, getUserByEmail } from '@/app/actions/users';
 import FinancialSummary from '@/components/FinancialSummary';
 import PortfolioInfographic from '@/components/PortfolioInfographic';
 import PortfolioRecommendations from '@/components/PortfolioRecommendations';
@@ -40,8 +43,33 @@ const sections = [
 ];
 
 export default function Home() {
+  const { session, loading, signOut } = useAuth();
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState('summary');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dbUserId, setDbUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!loading && !session) {
+      router.replace('/login');
+    }
+  }, [loading, session, router]);
+
+  useEffect(() => {
+    if (!session?.user) return;
+    const { id, email } = session.user;
+    getUserByAuthId(id)
+      .then(user => user ?? getUserByEmail(email ?? ''))
+      .then(user => { if (user) setDbUserId(user.id); });
+  }, [session?.user?.id]);
+
+  if (loading || !session) {
+    return (
+      <div style={{ backgroundColor: C.bg }} className="min-h-screen flex items-center justify-center">
+        <div style={{ color: C.textMid }} className="text-sm">Loading…</div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: C.bg, color: C.text }} className="min-h-screen font-sans">
@@ -57,12 +85,22 @@ export default function Home() {
                 Wealth & Wellness Hub
               </h1>
             </div>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:opacity-75"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <div className="flex items-center gap-3">
+              <span style={{ color: C.textMid }} className="hidden md:block text-sm">{session.user.email}</span>
+              <button
+                onClick={signOut}
+                style={{ borderColor: C.border, color: C.textMid }}
+                className="hidden md:block px-3 py-1.5 rounded-lg border text-sm hover:opacity-75"
+              >
+                Sign out
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg hover:opacity-75"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -95,13 +133,13 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeSection === 'summary' && <FinancialSummary />}
-        {activeSection === 'portfolio' && <PortfolioInfographic />}
+        {activeSection === 'summary'         && <FinancialSummary    userId={dbUserId} />}
+        {activeSection === 'portfolio'       && <PortfolioInfographic userId={dbUserId} />}
         {activeSection === 'recommendations' && <PortfolioRecommendations />}
-        {activeSection === 'health-score' && <FinancialHealthScore />}
-        {activeSection === 'storyboard' && <FinancialStoryboard />}
-        {activeSection === 'milestones' && <MilestonePlanner />}
-        {activeSection === 'spending' && <SpendingInsights />}
+        {activeSection === 'health-score'    && <FinancialHealthScore  userId={dbUserId} />}
+        {activeSection === 'storyboard'      && <FinancialStoryboard   userId={dbUserId} />}
+        {activeSection === 'milestones'      && <MilestonePlanner      userId={dbUserId} />}
+        {activeSection === 'spending'        && <SpendingInsights      userId={dbUserId} />}
       </main>
     </div>
   );
