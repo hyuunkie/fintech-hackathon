@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet, Lock } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
+import { getUserByAuthId, getUserByEmail } from '@/app/actions/users';
 import FinancialSummary from '@/components/FinancialSummary';
 import PortfolioInfographic from '@/components/PortfolioInfographic';
 import PortfolioRecommendations from '@/components/PortfolioRecommendations';
@@ -49,12 +50,21 @@ export default function Home() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState('summary');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dbUserId, setDbUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !session) {
       router.replace('/login');
     }
   }, [loading, session, router]);
+
+  useEffect(() => {
+    if (!session?.user) return;
+    const { id, email } = session.user;
+    getUserByAuthId(id)
+      .then(user => user ?? getUserByEmail(email ?? ''))
+      .then(user => { if (user) setDbUserId(user.id); });
+  }, [session?.user?.id]);
 
   if (loading || !session) {
     return (
@@ -126,14 +136,13 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeSection === 'summary' && <FinancialSummary />}
-        {activeSection === 'portfolio' && <PortfolioInfographic />}
+        {activeSection === 'summary'         && <FinancialSummary    userId={dbUserId} />}
+        {activeSection === 'portfolio'       && <PortfolioInfographic userId={dbUserId} />}
         {activeSection === 'recommendations' && <PortfolioRecommendations />}
-        {activeSection === 'health-score' && <FinancialHealthScore />}
-        {activeSection === 'storyboard' && <FinancialStoryboard />}
-        {activeSection === 'milestones' && <MilestonePlanner />}
-        {activeSection === 'spending' && <SpendingInsights />}
-        {activeSection === 'security' && <SecurityCenter />}
+        {activeSection === 'health-score'    && <FinancialHealthScore  userId={dbUserId} />}
+        {activeSection === 'storyboard'      && <FinancialStoryboard   userId={dbUserId} />}
+        {activeSection === 'milestones'      && <MilestonePlanner      userId={dbUserId} />}
+        {activeSection === 'spending'        && <SpendingInsights      userId={dbUserId} />}
       </main>
     </div>
   );
