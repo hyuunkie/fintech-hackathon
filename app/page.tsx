@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet } from 'lucide-react';
+import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet, Lock } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { getUserByAuthId, getUserByEmail } from '@/app/actions/users';
 import FinancialSummary from '@/components/FinancialSummary';
@@ -12,6 +12,8 @@ import FinancialHealthScore from '@/components/FinancialHealthScore';
 import FinancialStoryboard from '@/components/FinancialStoryboard';
 import MilestonePlanner from '@/components/MilestonePlanner';
 import SpendingInsights from '@/components/SpendingInsights';
+import SecurityCenter from '@/components/SecurityCenter';
+
 
 const C = {
   bg: "#080D14",
@@ -40,6 +42,7 @@ const sections = [
   { id: 'storyboard',      label: 'Financial Story',   icon: <CalendarDays size={15} /> },
   { id: 'milestones',      label: 'Milestones',        icon: <Target       size={15} /> },
   { id: 'spending',        label: 'Spending',          icon: <Wallet       size={15} /> },
+  { id: 'security',        label: 'Security',          icon: <Lock         size={15} /> }
 ];
 
 export default function Home() {
