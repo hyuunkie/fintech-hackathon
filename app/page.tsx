@@ -138,7 +138,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeSection === 'summary'         && <FinancialSummary    userId={dbUserId} />}
         {activeSection === 'portfolio'       && <PortfolioInfographic userId={dbUserId} />}
-        {activeSection === 'recommendations' && <PortfolioRecommendations />}
+        {activeSection === 'recommendations' && <PortfolioRecommendations userId={dbUserId} />}
         {activeSection === 'health-score'    && <FinancialHealthScore  userId={dbUserId} />}
         {activeSection === 'storyboard'      && <FinancialStoryboard   userId={dbUserId} />}
         {activeSection === 'milestones'      && <MilestonePlanner      userId={dbUserId} />}
