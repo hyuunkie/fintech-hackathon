@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet, Lock } from 'lucide-react';
+import { Menu, X, BarChart2, Briefcase, Lightbulb, TrendingUp, CalendarDays, Target, Wallet, Lock, DollarSign } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { getUserByAuthId, getUserByEmail } from '@/app/actions/users';
 import FinancialSummary from '@/components/FinancialSummary';
@@ -10,6 +10,8 @@ import PortfolioInfographic from '@/components/PortfolioInfographic';
 import PortfolioRecommendations from '@/components/PortfolioRecommendations';
 import PortfolioCRUD from '@/components/PortfolioCRUD';
 import ManualAssetsCRUD from '@/components/ManualAssetsCRUD';
+import BankAccountsCRUD from '@/components/BankAccountsCRUD';
+import InvestmentAccountsCRUD from '@/components/InvestmentAccountsCRUD';
 import FinancialHealthScore from '@/components/FinancialHealthScore';
 import FinancialStoryboard from '@/components/FinancialStoryboard';
 import MilestonePlanner from '@/components/MilestonePlanner';
@@ -40,6 +42,7 @@ const C = {
 const sections = [
   { id: 'summary',         label: 'Summary',          icon: <BarChart2    size={15} /> },
   { id: 'portfolio',       label: 'Portfolio',         icon: <Briefcase    size={15} /> },
+  { id: 'accounts',        label: 'Accounts',          icon: <DollarSign   size={15} /> },
   { id: 'recommendations', label: 'Recommendations',   icon: <Lightbulb    size={15} /> },
   { id: 'health-score',    label: 'Health Score',      icon: <TrendingUp   size={15} /> },
   { id: 'storyboard',      label: 'Financial Story',   icon: <CalendarDays size={15} /> },
@@ -146,6 +149,12 @@ export default function Home() {
             <PortfolioCRUD userId={dbUserId} />
             <ManualAssetsCRUD userId={dbUserId} />
           </>
+        )}
+        {activeSection === 'accounts'        && (
+          <div className="space-y-6">
+            <BankAccountsCRUD userId={dbUserId} />
+            <InvestmentAccountsCRUD userId={dbUserId} />
+          </div>
         )}
         {activeSection === 'recommendations' && <PortfolioRecommendations userId={dbUserId} />}
         {activeSection === 'health-score'    && <FinancialHealthScore  userId={dbUserId} />}
