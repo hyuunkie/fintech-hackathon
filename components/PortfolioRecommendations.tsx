@@ -102,7 +102,7 @@ export default function PortfolioRecommendations({
         setError(null);
 
         const res = await fetch(
-          `/api/portfolio/recommendations?userId=${encodeURIComponent(userId)}`,
+          `/api/portfolio/recommendations?userId=${encodeURIComponent(userId || '')}`,
           { method: 'GET', cache: 'no-store' }
         );
 

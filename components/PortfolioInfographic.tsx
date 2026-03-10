@@ -65,6 +65,11 @@ export default function PortfolioInfographic({ userId }: { userId: string | null
         setLoading(true);
         setError(null);
 
+        if (!userId) {
+          setLoading(false);
+          return;
+        }
+
         const res = await fetch(`/api/portfolio/summary?userId=${encodeURIComponent(userId)}`, {
           method: 'GET',
           cache: 'no-store',
@@ -76,7 +81,7 @@ export default function PortfolioInfographic({ userId }: { userId: string | null
           throw new Error('error' in data ? data.error : 'Failed to load portfolio');
         }
 
-        if (!ignore) {
+        if (!ignore && 'breakdown' in data) {
           setBreakdown(Array.isArray(data.breakdown) ? data.breakdown : []);
           setTotal(typeof data.total === 'number' ? data.total : 0);
         }
@@ -204,7 +209,7 @@ export default function PortfolioInfographic({ userId }: { userId: string | null
                 </Pie>
 
                 <Tooltip
-                  formatter={(value: number) => formatCurrency(value)}
+                  formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : '-'}
                   contentStyle={{
                     backgroundColor: C.bg,
                     border: `1px solid ${C.borderLight}`,

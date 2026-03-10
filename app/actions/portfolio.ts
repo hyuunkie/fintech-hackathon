@@ -129,9 +129,9 @@ export async function getTotalPortfolioValue(userId: string): Promise<number> {
     .eq("is_active", true);
 
   return (
-    (positions ?? []).reduce((s, p) => s + (p.current_value ?? 0), 0) +
-    (manualAssets ?? []).reduce((s, a) => s + (a.estimated_value ?? 0), 0) +
-    (banks ?? []).reduce((s, b) => s + (b.current_balance ?? 0), 0)
+    (positions ?? []).reduce((s: number, p: any) => s + (p.current_value ?? 0), 0) +
+    (manualAssets ?? []).reduce((s: number, a: any) => s + (a.estimated_value ?? 0), 0) +
+    (banks ?? []).reduce((s: number, b: any) => s + (b.current_balance ?? 0), 0)
   );
 }
 
@@ -157,13 +157,13 @@ export async function getPortfolioBreakdown(userId: string): Promise<PortfolioBr
         .eq("user_id", userId),
     ]);
 
-  const accountMap = new Map((accounts ?? []).map((a) => [a.id, a.brokerage_name ?? ""]));
+  const accountMap = new Map((accounts ?? []).map((a: any) => [a.id, a.brokerage_name ?? ""]));
   const breakdown: PortfolioBreakdownItem[] = [];
 
   // Cash from bank accounts
-  const cashTotal = (banks ?? []).reduce((s, b) => s + (b.current_balance ?? 0), 0);
+  const cashTotal = (banks ?? []).reduce((s: number, b: any) => s + (b.current_balance ?? 0), 0);
   if (cashTotal > 0) {
-    const bankNames = [...new Set((banks ?? []).map((b) => b.institution_name).filter(Boolean))];
+    const bankNames = [...new Set((banks ?? []).map((b: any) => b.institution_name).filter(Boolean))];
     breakdown.push({
       label: "Cash & Deposits",
       value: cashTotal,
@@ -175,10 +175,10 @@ export async function getPortfolioBreakdown(userId: string): Promise<PortfolioBr
   // Investment positions grouped by normalised type
   const grouped: Record<string, { value: number; sources: Set<string> }> = {};
   for (const p of positions ?? []) {
-    const norm = normaliseType(p.asset_type);
+    const norm = normaliseType((p as any).asset_type);
     if (!grouped[norm]) grouped[norm] = { value: 0, sources: new Set() };
-    grouped[norm].value += p.current_value ?? 0;
-    const src = accountMap.get(p.investment_account_id ?? "");
+    grouped[norm].value += (p as any).current_value ?? 0;
+    const src = accountMap.get((p as any).investment_account_id ?? "");
     if (src) grouped[norm].sources.add(src);
   }
   for (const [type, { value, sources }] of Object.entries(grouped)) {
@@ -193,9 +193,9 @@ export async function getPortfolioBreakdown(userId: string): Promise<PortfolioBr
   // Manual assets grouped by type
   const manualGrouped: Record<string, { label: string; value: number }> = {};
   for (const a of manualAssets ?? []) {
-    const norm = normaliseType(a.asset_type);
-    if (!manualGrouped[norm]) manualGrouped[norm] = { label: TYPE_LABEL[norm] ?? a.asset_name, value: 0 };
-    manualGrouped[norm].value += a.estimated_value;
+    const norm = normaliseType((a as any).asset_type);
+    if (!manualGrouped[norm]) manualGrouped[norm] = { label: TYPE_LABEL[norm] ?? (a as any).asset_name, value: 0 };
+    manualGrouped[norm].value += (a as any).estimated_value;
   }
   for (const [type, { label, value }] of Object.entries(manualGrouped)) {
     breakdown.push({ label, value, type, source: "Manual Input" });
@@ -233,9 +233,9 @@ export async function getSpendingCategories(userId: string): Promise<SpendingCat
 
   const grouped: Record<string, number> = {};
   for (const t of txns ?? []) {
-    const raw = t.category ?? "Other";
+    const raw = (t as any).category ?? "Other";
     const cat = CATEGORY_NORMALISE[raw] ?? raw;
-    grouped[cat] = (grouped[cat] ?? 0) + Math.abs(t.amount);
+    grouped[cat] = (grouped[cat] ?? 0) + Math.abs((t as any).amount);
   }
 
   return Object.entries(grouped)
@@ -269,4 +269,86 @@ export async function upsertWellnessScore(input: WellnessScoreInsert): Promise<W
     .single();
   if (error) throw new Error(error.message);
   return data as WellnessScore;
+}
+
+export async function getWellnessScores(userId: string): Promise<WellnessScore[]> {
+  const { data, error } = await supabase
+    .from("wellness_scores")
+    .select("*")
+    .eq("user_id", userId)
+    .order("calculated_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function deleteWellnessScore(id: string, userId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from("wellness_scores")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", userId);
+  return !error;
+}
+
+// ─── Transactions ─────────────────────────────────────────────────────────────
+
+type Transaction = Database["public"]["Tables"]["transactions"]["Row"];
+type TransactionInsert = Omit<Transaction, "id" | "created_at">;
+
+export async function getTransactions(userId: string, limit: number = 100): Promise<Transaction[]> {
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .eq("user_id", userId)
+    .order("transaction_date", { ascending: false })
+    .limit(limit);
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function getTransaction(id: string, userId: string): Promise<Transaction | null> {
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", userId)
+    .single();
+  if (error) return null;
+  return data;
+}
+
+export async function getTransactionsByCategory(userId: string, category: string): Promise<Transaction[]> {
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("category", category)
+    .order("transaction_date", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function getTransactionsByDateRange(
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Promise<Transaction[]> {
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .eq("user_id", userId)
+    .gte("transaction_date", startDate)
+    .lte("transaction_date", endDate)
+    .order("transaction_date", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function deleteTransaction(id: string, userId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from("transactions")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", userId);
+  return !error;
 }

@@ -47,7 +47,7 @@ export default function LoginPage() {
         await supabase.from("users").insert({
           supabase_auth_id: data.user.id,
           email: data.user.email ?? null,
-        });
+        } as never);
         setMessage("Check your email to confirm your account, then log in.");
       }
     }

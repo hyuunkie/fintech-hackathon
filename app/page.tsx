@@ -8,10 +8,13 @@ import { getUserByAuthId, getUserByEmail } from '@/app/actions/users';
 import FinancialSummary from '@/components/FinancialSummary';
 import PortfolioInfographic from '@/components/PortfolioInfographic';
 import PortfolioRecommendations from '@/components/PortfolioRecommendations';
+import PortfolioCRUD from '@/components/PortfolioCRUD';
+import ManualAssetsCRUD from '@/components/ManualAssetsCRUD';
 import FinancialHealthScore from '@/components/FinancialHealthScore';
 import FinancialStoryboard from '@/components/FinancialStoryboard';
 import MilestonePlanner from '@/components/MilestonePlanner';
 import SpendingInsights from '@/components/SpendingInsights';
+import TransactionsCRUD from '@/components/TransactionsCRUD';
 import SecurityCenter from '@/components/SecurityCenter';
 
 
@@ -137,12 +140,24 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeSection === 'summary'         && <FinancialSummary    userId={dbUserId} />}
-        {activeSection === 'portfolio'       && <PortfolioInfographic userId={dbUserId} />}
+        {activeSection === 'portfolio'       && (
+          <>
+            <PortfolioInfographic userId={dbUserId} />
+            <PortfolioCRUD userId={dbUserId} />
+            <ManualAssetsCRUD userId={dbUserId} />
+          </>
+        )}
         {activeSection === 'recommendations' && <PortfolioRecommendations userId={dbUserId} />}
         {activeSection === 'health-score'    && <FinancialHealthScore  userId={dbUserId} />}
         {activeSection === 'storyboard'      && <FinancialStoryboard   userId={dbUserId} />}
         {activeSection === 'milestones'      && <MilestonePlanner      userId={dbUserId} />}
-        {activeSection === 'spending'        && <SpendingInsights      userId={dbUserId} />}
+        {activeSection === 'spending'        && (
+          <>
+            <SpendingInsights      userId={dbUserId} />
+            <TransactionsCRUD      userId={dbUserId} />
+          </>
+        )}
+        {activeSection === 'security'        && <SecurityCenter />}
       </main>
     </div>
   );
