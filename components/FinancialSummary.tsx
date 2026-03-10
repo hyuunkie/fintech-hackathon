@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { C, OVER_TIME } from '@/lib/constants';
-import { TrendingUp, ArrowUp, BarChart2, Target } from 'lucide-react';
+import { TrendingUp, ArrowUp, ArrowDown, BarChart2, Target } from 'lucide-react';
 import { getPortfolioBreakdown, getTotalPortfolioValue, getLatestWellnessScore } from '@/app/actions/portfolio';
 import type { PortfolioBreakdownItem } from '@/app/actions/portfolio';
 
@@ -62,7 +62,11 @@ export default function FinancialSummary({ userId }: { userId: string | null }) 
             <p style={{ color: C.textMid }} className="text-sm mb-2">Total Net Worth</p>
             <div className="text-3xl font-bold mb-2">{formatCurrency(total)}</div>
             <div className="flex items-center gap-2">
-              <ArrowUp size={16} style={{ color: change >= 0 ? C.green : C.red }} />
+              {change >= 0 ? (
+                <ArrowUp size={16} style={{ color: C.green }} />
+              ) : (
+                <ArrowDown size={16} style={{ color: C.red }} />
+              )}
               <span style={{ color: change >= 0 ? C.green : C.red }} className="text-sm font-semibold">
                 {change >= 0 ? '+' : ''}{formatCurrency(change)} ({changePercent}%)
               </span>
@@ -125,9 +129,9 @@ export default function FinancialSummary({ userId }: { userId: string | null }) 
         <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif" }} className="text-2xl font-bold mb-6">Financial Health Indicators</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="p-6 rounded-xl" style={{ backgroundColor: C.bgElevated }}>
-            <TrendingUp style={{ color: C.green }} size={24} className="mb-3" />
+            <TrendingUp style={{ color: change >= 0 ? C.green : C.red }} size={24} className="mb-3" />
             <p style={{ color: C.textMid }} className="text-sm mb-2">Growth (vs last month)</p>
-            <p className="text-2xl font-bold">+{changePercent}%</p>
+            <p className="text-2xl font-bold" style={{ color: change >= 0 ? C.green : C.red }}>{change >= 0 ? '+' : ''}{changePercent}%</p>
             <p style={{ color: C.textMid }} className="text-xs mt-2">Net worth change</p>
           </div>
           <div className="p-6 rounded-xl" style={{ backgroundColor: C.bgElevated }}>
