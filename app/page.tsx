@@ -10,6 +10,7 @@ import PortfolioInfographic from '@/components/PortfolioInfographic';
 import PortfolioRecommendations from '@/components/PortfolioRecommendations';
 import PortfolioCRUD from '@/components/PortfolioCRUD';
 import ManualAssetsCRUD from '@/components/ManualAssetsCRUD';
+import SnaptradeLinker from '@/components/SnaptradeLinker';
 import FinancialHealthScore from '@/components/FinancialHealthScore';
 import FinancialStoryboard from '@/components/FinancialStoryboard';
 import MilestonePlanner from '@/components/MilestonePlanner';
@@ -143,6 +144,7 @@ export default function Home() {
         {activeSection === 'portfolio'       && (
           <>
             <PortfolioInfographic userId={dbUserId} />
+            <SnaptradeLinker userId={dbUserId} />
             <PortfolioCRUD userId={dbUserId} />
             <ManualAssetsCRUD userId={dbUserId} />
           </>
