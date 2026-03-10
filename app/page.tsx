@@ -13,6 +13,10 @@ import FinancialStoryboard from '@/components/FinancialStoryboard';
 import MilestonePlanner from '@/components/MilestonePlanner';
 import SpendingInsights from '@/components/SpendingInsights';
 import SecurityCenter from '@/components/SecurityCenter';
+import ManualAssetsForm from '@/components/ManualAssetsForm';
+import ManualTransactionsForm from '@/components/ManualTransactionsForm';
+import IncomeTracker from '@/components/IncomeTracker';
+import FinancialEventsTracker from '@/components/FinancialEventsTracker';
 
 
 const C = {
@@ -136,13 +140,34 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeSection === 'summary'         && <FinancialSummary    userId={dbUserId} />}
-        {activeSection === 'portfolio'       && <PortfolioInfographic userId={dbUserId} />}
+        {activeSection === 'summary'         && (
+          <div className="space-y-8">
+            <FinancialSummary    userId={dbUserId} />
+            <IncomeTracker userId={dbUserId} />
+          </div>
+        )}
+        {activeSection === 'portfolio'       && (
+          <div className="space-y-8">
+            <PortfolioInfographic userId={dbUserId} />
+            <ManualAssetsForm userId={dbUserId} />
+          </div>
+        )}
         {activeSection === 'recommendations' && <PortfolioRecommendations />}
         {activeSection === 'health-score'    && <FinancialHealthScore  userId={dbUserId} />}
-        {activeSection === 'storyboard'      && <FinancialStoryboard   userId={dbUserId} />}
+        {activeSection === 'storyboard'      && (
+          <div className="space-y-8">
+            <FinancialStoryboard   userId={dbUserId} />
+            <FinancialEventsTracker userId={dbUserId} />
+          </div>
+        )}
         {activeSection === 'milestones'      && <MilestonePlanner      userId={dbUserId} />}
-        {activeSection === 'spending'        && <SpendingInsights      userId={dbUserId} />}
+        {activeSection === 'spending'        && (
+          <div className="space-y-8">
+            <SpendingInsights      userId={dbUserId} />
+            <ManualTransactionsForm userId={dbUserId} />
+          </div>
+        )}
+        {activeSection === 'security'        && <SecurityCenter />}
       </main>
     </div>
   );

@@ -209,6 +209,52 @@ export interface Database {
         Insert: Omit<Database["public"]["Tables"]["stress_test_results"]["Row"], "id" | "calculated_at">;
         Update: Partial<Database["public"]["Tables"]["stress_test_results"]["Insert"]>;
       };
+      income_entries: {
+        Row: {
+          id: string;
+          user_id: string;
+          amount: number;
+          income_type: string;
+          source: string | null;
+          income_date: string;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["income_entries"]["Row"], "id" | "created_at" | "updated_at">;
+        Update: Partial<Database["public"]["Tables"]["income_entries"]["Insert"]>;
+      };
+      financial_events: {
+        Row: {
+          id: string;
+          user_id: string;
+          event_type: string;
+          title: string;
+          description: string | null;
+          impact_amount: number | null;
+          event_date: string;
+          tags: string[];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["financial_events"]["Row"], "id" | "created_at" | "updated_at">;
+        Update: Partial<Database["public"]["Tables"]["financial_events"]["Insert"]>;
+      };
+      expense_templates: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          category: string;
+          amount: number;
+          frequency: string;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["expense_templates"]["Row"], "id" | "created_at" | "updated_at">;
+        Update: Partial<Database["public"]["Tables"]["expense_templates"]["Insert"]>;
+      };
     };
   };
 }
