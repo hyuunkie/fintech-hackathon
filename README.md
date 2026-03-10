@@ -5,3 +5,11 @@ Beyond aggregation, the platform embeds financial wellness analytics through a p
 
 Security is foundational, not an afterthought. A centralised security architecture wraps the entire application, ensuring consistent session monitoring and account protection across all features.
 Built for Singapore's financial ecosystem and designed for young professionals navigating complex, multi-platform wealth, Wealth Wellness Hub transforms fragmented financial data into clarity — empowering users to understand their complete financial position, manage risk confidently, and build long-term financial resilience
+
+**Live Demo:** [https://fintech-hackathon3.vercel.app](https://fintech-hackathon3.vercel.app)
+
+**Test Credentials:**
+- Email: `sarah@test.com`
+- Password: `test123`
+
+> Prefer a fresh experience? Register your own account and manually add your assets, investments, and milestones to see the platform from a live user perspective. Note: Spending insights are populated via bank API integration and are best viewed through the test account.
